@@ -181,8 +181,12 @@ public class Profile extends AppCompatActivity {
                         txt_Contact.setText(response.body().getResult().get(0).getMobile());
                         txt_password.setText(response.body().getResult().get(0).getPassword());
 
-                        Picasso.get().load("" + response.body().getResult().get(0).getImage())
-                                .into(imageView_profile);
+                        try {
+                            Picasso.get().load("" + response.body().getResult().get(0).getImage())
+                                    .into(imageView_profile);
+                        } catch (Exception e) {
+                            Log.e("Exception", "" + e.getMessage());
+                        }
 
                     }
                 }

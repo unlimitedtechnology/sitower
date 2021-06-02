@@ -116,11 +116,9 @@ public class Registration extends AppCompatActivity {
                 progressDialog.dismiss();
                 if (response.code() == 200) {
                     Toast.makeText(Registration.this, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    if (response.body().getStatus() == 200) {
-                        prefManager.setLoginId("" + response.body().getResult().get(0).getId());
-                        startActivity(new Intent(Registration.this, MainActivity.class));
-                        finish();
-                    }
+                    finish();
+                }else{
+                    Toast.makeText(Registration.this, "" + response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
