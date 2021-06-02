@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
         PrefManager.forceRTLIfSupported(getWindow(), LoginActivity.this);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
+        AppEventsLogger.activateApp(getApplication());
         callbackManager = CallbackManager.Factory.create();
 
         Init();
