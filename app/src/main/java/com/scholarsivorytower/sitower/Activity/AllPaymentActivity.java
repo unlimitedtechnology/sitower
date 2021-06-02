@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -77,9 +78,9 @@ public class AllPaymentActivity extends AppCompatActivity implements PaymentStat
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_all_payment);
 
-
+        ly_razor = findViewById(R.id.ly_razor);
         ly_paypal = findViewById(R.id.ly_paypal);
-
+        ly_upi = findViewById(R.id.ly_upi);
         btn_continue = findViewById(R.id.btn_continue);
 
         prefManager = new PrefManager(this);
