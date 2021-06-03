@@ -29,7 +29,7 @@ android {
         android {
             defaultConfig {
                 manifestPlaceholders = [
-                        onesignal_app_id               : '0eceba1c-9d77-4323-ae6c-b5696d0b50d1',
+                        onesignal_app_id               : '549f67be-fe8d-4523-ae48-d3b9cf897c34',
                         onesignal_google_project_number: '836726949688'
                 ]
             }
