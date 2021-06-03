@@ -618,7 +618,7 @@ public class BookDetails extends AppCompatActivity {
 
         if (prefManager.isNetworkAvailable(BookDetails.this)) {
             if (!prefManager.getLoginId().equalsIgnoreCase("0")) {
-                if (BookList.get(0).getIs_buy() == 0) {
+                if (BookList.get(0).getIs_buy() == 1) {
 
                     Intent intent = new Intent(BookDetails.this, AllPaymentActivity.class);
                     intent.putExtra("bookprice", "" + BookList.get(0).getPrice());
