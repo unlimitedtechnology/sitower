@@ -29,7 +29,7 @@ public class LocaleUtils {
     /* Paypal Credintial */
     public static String CONFIG_ENVIRONMENT = PayPalConfiguration.ENVIRONMENT_PRODUCTION;
 
-    public static final String PAYPAL_CLIENT_ID = "AW-vjni-LjxSSX6dYmqegb45uNU7OLMFd6c0ujrEQiOsin1VfiHZdChWDhwfK1bFHKzGtU7aRPCpLNHR";
+    public static final String PAYPAL_CLIENT_ID = "AeCyzOHgw0row1Pbhgg4vWluy8a04m588ulSTzan5ayfk2higSzkiCWxamHtR2jgNbp1o9XqGNm6j5uv";
 
     /* UPI ID */
     public static String UPI_NAME ="DivineTechs";
