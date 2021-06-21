@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,6 +15,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Environment;
+import android.provider.Settings;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +31,10 @@ import android.widget.Toast;
 
 import com.scholarsivorytower.sitower.R;
 import com.scholarsivorytower.sitower.Utility.PrefManager;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.os.Build.VERSION.SDK_INT;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -89,23 +96,14 @@ public class WelcomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(WelcomeActivity.this, Manifest.permission.READ_CONTACTS)) {
-                            Intent intent_status = new Intent(getApplicationContext(), PermissionActivity.class);
-                            startActivity(intent_status);
-                            overridePendingTransition(R.anim.enter, R.anim.exit);
-                        } else {
-                            Intent intent_status = new Intent(getApplicationContext(), PermissionActivity.class);
-                            startActivity(intent_status);
-                            overridePendingTransition(R.anim.enter, R.anim.exit);
-                        }
+                    if (!checkPermission11()) {
+                        requestPermission();
                     } else {
                         launchHomeScreen();
                     }
                 } else {
                     launchHomeScreen();
                 }
-
             }
         });
 
@@ -120,16 +118,8 @@ public class WelcomeActivity extends AppCompatActivity {
                     viewPager.setCurrentItem(current);
                 } else {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                            if (ActivityCompat.shouldShowRequestPermissionRationale(WelcomeActivity.this, Manifest.permission.READ_CONTACTS)) {
-                                Intent intent_status = new Intent(getApplicationContext(), PermissionActivity.class);
-                                startActivity(intent_status);
-                                overridePendingTransition(R.anim.enter, R.anim.exit);
-                            } else {
-                                Intent intent_status = new Intent(getApplicationContext(), PermissionActivity.class);
-                                startActivity(intent_status);
-                                overridePendingTransition(R.anim.enter, R.anim.exit);
-                            }
+                        if (!checkPermission11()) {
+                            requestPermission();
                         } else {
                             launchHomeScreen();
                         }
@@ -177,18 +167,9 @@ public class WelcomeActivity extends AppCompatActivity {
         public void onPageSelected(int position) {
             addBottomDots(position);
 
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(WelcomeActivity.this, Manifest.permission.READ_CONTACTS)) {
-                        Intent intent_status = new Intent(getApplicationContext(), PermissionActivity.class);
-                        startActivity(intent_status);
-                        overridePendingTransition(R.anim.enter, R.anim.exit);
-                    } else {
-                        Intent intent_status = new Intent(getApplicationContext(), PermissionActivity.class);
-                        startActivity(intent_status);
-                        overridePendingTransition(R.anim.enter, R.anim.exit);
-                    }
+                if (!checkPermission11()) {
+                    requestPermission();
                 }
             }
 
@@ -236,11 +217,31 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void requestPermission() {
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(WelcomeActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(WelcomeActivity.this, "Write External Storage permission allows us to do store images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s", getApplicationContext().getPackageName())));
+                startActivityForResult(intent, PERMISSION_REQUEST_CODE);
+            } catch (Exception e) {
+                Intent intent = new Intent();
+                intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                startActivityForResult(intent, PERMISSION_REQUEST_CODE);
+            }
         } else {
-            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            //below android 11
+            ActivityCompat.requestPermissions(WelcomeActivity.this,
+                    new String[]{WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private boolean checkPermission11() {
+        if (SDK_INT >= Build.VERSION_CODES.R) {
+            return Environment.isExternalStorageManager();
+        } else {
+            int result = ContextCompat.checkSelfPermission(WelcomeActivity.this, READ_EXTERNAL_STORAGE);
+            int result1 = ContextCompat.checkSelfPermission(WelcomeActivity.this, WRITE_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
         }
     }
 
